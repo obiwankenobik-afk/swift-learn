@@ -2,17 +2,25 @@
 
 import Foundation
 
-//one
+// Создайте переменную, которая будет хранить строку «Hello, Skillbox» и напечатайте её содержимое с помощью команды print().
+
 var firstHello = "Hello, Skillbox"
-print (firstHello)
+print(firstHello)
 
-//two
+//  Создайте константу, которая будет хранить строку «Hello, Skillbox» и напечатайте её содержимое с помощью команды print().
+
 let twoHello = "Hello, Skillbox"
-print (twoHello)
+print(twoHello)
 
-//three
+// Создайте переменную с явным указанием типа, присвойте ей значение 0.5 и напечатайте её содержимое с помощью команды print().
+
 var threeNumber: Double = 0.5
-print (threeNumber)
+print(threeNumber)
 
-//four
-print(10+threeNumber)
+// Напишите код, который складывает два числа: 10 и 0,5. Выведите результат командой print().
+
+let firstNumber: Double = 0.5
+let twoNumber: Int = 10
+var result = firstNumber + Double(twoNumber)
+print(result)
+
