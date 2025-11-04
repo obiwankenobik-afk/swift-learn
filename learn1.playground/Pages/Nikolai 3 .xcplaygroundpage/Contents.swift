@@ -1,24 +1,24 @@
 //MARK: Задание 1. Напишите функцию, которая принимает на вход два целых числа и выводит в консоль, равны они или нет. Должны выполняться следующие условия: Если первое число равно второму числу, надо вывести в консоль слово «равно». Если первое число больше второго, то вывести слово «больше». Если первое число меньше, то вывести слово «меньше».
 
 //через if else
-func equalityNumber(_ number1: Int, _ number2: Int) -> String {
-    if number1 == number2 { 
+func equalityNumber(_ firstNumber: Int, _ secondNumber: Int) -> String {
+    if firstNumber == secondNumber {
         "Числа равны"
     }
-    else if number1 > number2 { 
-    "Первое число больше"
+    else if firstNumber > secondNumber {
+        "Первое число больше"
     }
     else {
         "Первое число меньше"
     }
 }
 
-var sravn = equalityNumber(2, 1)
-print(sravn)
+var firstComparison = equalityNumber(2, 1)
+print(firstComparison)
 
 //через case
-func equalityNumber2(_ number1: Int, _ number2: Int) -> String {
-    switch (number1, number2) {
+func equalityNumber2(_ firstNumber: Int, _ secondNumber: Int) -> String {
+    switch (firstNumber, secondNumber) {
     case let (a, b) where a == b:
         "Числа равны"
     case let (a, b) where a > b:
@@ -26,25 +26,25 @@ func equalityNumber2(_ number1: Int, _ number2: Int) -> String {
     default:
         "Первое число меньше"
     }
-
+    
 }
 
-var sravn2 = equalityNumber2(3, 4)
-print(sravn2)
+var secondComparison = equalityNumber2(3, 4)
+print(secondComparison)
 
 //через guard
-func equalityNumber3(_ number1: Int,_ number2: Int) -> String {
-    guard number1 == number2 else {
-        guard number1 > number2 else {
-         return "Первое число меньше"
+func equalityNumber3(_ firstNumber: Int,_ secondNumber: Int) -> String {
+    guard firstNumber == secondNumber else {
+        guard firstNumber > secondNumber else {
+            return "Первое число меньше"
         }
         return "Первое число больше"
     }
     return "Числа равны"
 }
 
-var sravn3 = equalityNumber3(1, 1)
-print(sravn3)
+var thirdNumber = equalityNumber3(1, 1)
+print(thirdNumber)
 
 //MARK: Задание 2. Напишите функцию func summ(toValue: Int), которая посчитает и выведет сумму всех нечётных чисел от 1 до заданного числа. Для определения нечётного числа нужно использовать оператор остатка от целочисленного деления %. Если остаток от деления на 2 не равен 0, это число нечётное. let result = summ(toValue: 100) print(result) Вывод в консоль: 2500
 
@@ -59,16 +59,16 @@ func summ(toValue: Int) -> Int {
 }
 let result = summ(toValue: 100)
 print(result)
-        
+
 //MARK: Задание 3. Напишите функцию, которая будет принимать целое число, а выводить все целые числа, квадраты которых меньше или равны переданному параметру. Квадрат числа — это результат умножения числа на самого себя. Например, 9 — это квадрат числа 3. n = 10 вывод в консоль: 1 2 3
 
 func numbersSquares(_ value: Int) {
     var number = 1
     while value >= number * number {
-            print(number)
-            number += 1
-        }
+        print(number)
+        number += 1
     }
+}
 
 numbersSquares(10)
 
@@ -76,11 +76,15 @@ numbersSquares(10)
 
 func handleDiceRoll(_ result: Int) {
     switch result {
-    case ...3:
+    case 1...3:
         print("Проигрыш")
+    case ..<1:
+        print("Введено неверное значение, введите число от 1 до 6")
+    case 7...:
+        print("Введено неверное значение, введите число от 1 до 6")
     default:
         print("Победа")
     }
 }
 
-handleDiceRoll(3)
+handleDiceRoll(-1)
