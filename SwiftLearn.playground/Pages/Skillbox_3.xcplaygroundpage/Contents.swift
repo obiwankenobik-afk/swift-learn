@@ -78,13 +78,11 @@ func handleDiceRoll(_ result: Int) {
     switch result {
     case 1...3:
         print("Проигрыш")
-    case ..<1:
-        print("Введено неверное значение, введите число от 1 до 6")
-    case 7...:
-        print("Введено неверное значение, введите число от 1 до 6")
-    default:
+    case 4...6:
         print("Победа")
+    default:
+        print("Введено неверное значение, введите число от 1 до 6")
     }
 }
 
-handleDiceRoll(-1)
+handleDiceRoll(3)

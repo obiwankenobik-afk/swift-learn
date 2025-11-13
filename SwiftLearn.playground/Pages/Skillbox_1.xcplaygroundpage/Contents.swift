@@ -21,6 +21,7 @@ print(threeNumber)
 
 let firstNumber: Double = 0.5
 let twoNumber: Int = 10
-var result = firstNumber + Double(twoNumber)
+let result = firstNumber + Double(twoNumber)
+
 print(result)
 
