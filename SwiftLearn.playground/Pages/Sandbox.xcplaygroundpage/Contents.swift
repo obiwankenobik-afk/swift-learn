@@ -11,7 +11,7 @@ var defaultErrorMessage = "Ошибочка"
 defaultErrorMessage = alertMessage
 
 
-y*=10
+y * =10
 
 
 //типы
