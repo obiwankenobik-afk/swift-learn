@@ -6,7 +6,7 @@ for _ in 1...10 {
     emptyArray.append(randomInt)
 }
 
-func zeroReplaceAndSort(_ array: [Int]) -> [Int] {
+func firstZeroReplaceAndSort(_ array: [Int]) -> [Int] {
     var newArray: [Int] = []
     for number in array {
         if number < 0 {
@@ -18,29 +18,29 @@ func zeroReplaceAndSort(_ array: [Int]) -> [Int] {
     return newArray.sorted()
 }
 
-print(zeroReplaceAndSort(emptyArray))
+print(firstZeroReplaceAndSort(emptyArray))
 
 //через map
 
-func zeroReplaceAndSort2(_ array: [Int]) -> [Int] {
-    let newArray = array.map{ $0 < 0 ? 0 : $0 }
+func secondZeroReplaceAndSort(_ array: [Int]) -> [Int] {
+    let newArray = array.map { $0 < 0 ? 0 : $0 }
     return newArray.sorted()
 }
 
-var secondResultArray = zeroReplaceAndSort2(emptyArray)
+var secondResultArray = secondZeroReplaceAndSort(emptyArray)
 print(secondResultArray)
 
 //MARK: Задание 2. Напишите функцию, которая принимает в качестве параметра массив и возвращает его в обратном порядке.
 
-func reversedArray( _ array: [Int]) -> [Int] {
-    return array.reversed()
+func reversedArray(_ array: [Int]) -> [Int] {
+    array.reversed()
 }
 
-print(reversedArray([1,5,3,73,64,7,3,0]))
+print(reversedArray([1, 5, 3, 73, 64, 7, 3, 0]))
 
 //MARK: Задание 3. Напишите функцию, которая принимает в качестве параметров целое число и замыкание и вызывает внутри себя замыкание для проверки значения. Напишите замыкание, которое принимает в качестве параметра целое число и затем печатает в консоль название месяца, порядковый номер которого соответствует переданному параметру. Например: если передаётся 1, печатается «январь», 2 — «февраль». Если число выходит за рамки номеров месяцев, то должно печататься: «Такого месяца не бывает». Вызовите функцию, передав в неё значения для проверки.
 
-let monthArray = ["январь", "февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"]
+let monthArray = ["январь",  "февраль", "март", "апрель", "май", "июнь", "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"]
 
 func checkNumber(_ number: Int, completion: (Int) -> Void) {
     completion(number)
@@ -62,8 +62,8 @@ func numberClosed(_ numbers: [Int], completion: (Int) -> Void) {
     if numbers.isEmpty {
         print("Месяцев нет")
     } else {
-        numbers.forEach { number in
-            completion(number)
+        numbers.forEach {
+            completion($0)
         }
     }
 }
@@ -101,8 +101,7 @@ print(firstArrayNoDuplicate(arrayNoSort))
 //с использованием множест
 
 func secondArrayNoDuplicate(_ array: [Int]) -> [Int] {
-    let uniqueArray = Set(array)
-    return Array(uniqueArray)
+    Array(Set(array))
 }
 
 print(secondArrayNoDuplicate(arrayNoSort))
