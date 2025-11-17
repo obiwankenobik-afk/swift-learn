@@ -44,8 +44,8 @@ enum CustomError: Error, LocalizedError {
             "Неправильный пароль"
         case .userNotFound:
             "Пользователь не найден"
-        case .invalidUsername(let err):
-            "Некорректрный символ в имени пользователя '\(err)'"
+        case .invalidUsername(let error):
+            "Некорректрный символ в имени пользователя '\(error)'"
         }
     }
 }
@@ -57,8 +57,8 @@ func validation(_ user: String, _ password: String, _ dataBase: [String: String]
     let banSymbols: Set = ["*", "/", "!", ".", ",", "[", "]", "}", "{", ":", ";", "<", ">", "?", "-", "+", "="]
     let userNames = dataBase.keys
     let userPassword = dataBase[user]
-    for symbol in banSymbols {
-        if user.contains(symbol) {
+    for symbol in user {
+        if banSymbols.contains(String(symbol)) {
             throw CustomError.invalidUsername("\(symbol)")
         }
     }
@@ -74,52 +74,35 @@ func validation(_ user: String, _ password: String, _ dataBase: [String: String]
 //MARK: Задание 6. Напишите код обработки ошибки из функции в задании 5. Выведите описание ошибки, если она произошла, а иначе выведите сообщение, что вход в систему успешно осуществлён. Обработку ошибки сделайте двумя способами: С помощью конструкции do-catch. С помощью try?.
 
 //try?
-
-func firstValidationForSixth(_ user: String, _ password: String, _ dataBase: [String: String]) throws {
-    let banSymbols: Set = ["*", "/", "!", ".", ",", "[", "]", "}", "{", ":", ";", "<", ">", "?", "-", "+", "="]
-    let userNames = dataBase.keys
-    let userPassword = dataBase[user]
-    for symbol in banSymbols {
-        if user.contains(symbol) {
-            throw CustomError.invalidUsername("\(symbol)")
-        }
-    }
-    if !userNames.contains(user) {
-        throw CustomError.userNotFound
-    }
-    if userPassword != password {
-        throw CustomError.invalidPassword
-    }
-    print("Вы вошли")
+if let _ = try? validation("Kate", "katyashka691", passwordAndUser) {
+} else {
+    print("Произошла ошибка")
 }
-    
-
-let firstResult: ()? = try? validation("Kate", "katyashka619", passwordAndUser)
 
 
 //do-catch
 
 //не тот пароль
 do {
-    let secondResult: () = try firstValidationForSixth("James", "katyashka69", passwordAndUser)
+    try validation("James", "katyashka69", passwordAndUser)
 } catch {
     print("Пожалуйста, исправь эту ошибку: \(error.localizedDescription)")
 }
 //не тот пользователь
 do {
-    let secondResult: () = try firstValidationForSixth("Danya", "katyashka69", passwordAndUser)
+    try validation("Danya", "katyashka69", passwordAndUser)
 } catch {
     print("Пожалуйста, исправь эту ошибку: \(error.localizedDescription)")
 }
 //символ
 do {
-    let secondResult: () = try firstValidationForSixth("Kate?", "katyashka69", passwordAndUser)
+    try validation("Kate?", "katyashka69", passwordAndUser)
 } catch {
     print("Пожалуйста, исправь эту ошибку: \(error.localizedDescription)")
 }
 //вошли
 do {
-    let secondResult: () = try firstValidationForSixth("Kate", "katyashka69", passwordAndUser)
+    try validation("Kate", "katyashka69", passwordAndUser)
 } catch {
     print("Пожалуйста, исправь эту ошибку: \(error.localizedDescription)")
 }
