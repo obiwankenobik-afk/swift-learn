@@ -28,16 +28,34 @@
 struct Person {
     var name: String
     var age: Int
-    lazy var info: String = "\(self.name) \(self.age) года"
-    func getAgeComparisonString(_ p: Person) -> String {
-        if p.age > self.age {
-            return "\(p.name) старше меня"
-        } else if p.age < self.age {
-            return "\(p.name) младше меня"
-        } else {
-            return "\(p.name) такого же возраста, как и я "
+    lazy var info: String = {
+        let ageWord = getCorrectAgeWord(self.age)
+        return "\(name) \(age) \(ageWord)"
+    }()
+        func getAgeComparisonString(_ person: Person) -> String {
+            if person.age > self.age {
+                return "\(person.name) старше меня"
+            } else if person.age < self.age {
+                return "\(person.name) младше меня"
+            } else {
+                return "\(person.name) такого же возраста, как и я "
+            }
         }
-    }
+        func getCorrectAgeWord(_ age: Int) -> String {
+            let countHelp = age % 10
+            if age >= 11 && age <= 14 {
+                return("лет")
+            }
+                    switch countHelp {
+                    case 1:
+                        return "год"
+                    case 2...4:
+                        return "года"
+                    default:
+                        return "лет"
+                    }
+        
+        }
 }
 var p1 = Person(name: "Антон", age: 24)
 var p2 = Person(name: "Андрей", age: 36)
@@ -47,9 +65,9 @@ p1.getAgeComparisonString(p2)
 p2.getAgeComparisonString(p1)
 p1.getAgeComparisonString(p3)
 
-p1.info
-p2.info
-p3.info
+print(p1.info)
+print(p2.info)
+print(p3.info)
 
 //MARK: Задание 3
 //Создайте класс Hero. Добавьте свойство «количество жизней» — lifeCount. Количество жизней задаётся при создании героя в инициализаторе. Добавьте метод «попадание», который уменьшает количество жизней, — hit().
@@ -65,21 +83,20 @@ p3.info
 
 class Hero {
     private var lifeCount: Int
-    init(lifeCount: Int) {
-        self.lifeCount = lifeCount
-    }
     var isLive: Bool {
-        return lifeCount > 0
+        lifeCount > 0
     }
-    
-    func hit() {
-        self.lifeCount -= 1
+        init(lifeCount: Int) {
+            self.lifeCount = lifeCount
+    }
+        func hit() {
+            lifeCount -= 1
     }
 }
 
 class SuperHero: Hero {
-    override func hit() {
-        print("Герой неуязвим")
+        override func hit() {
+            print("Герой неуязвим")
     }
 }
 
