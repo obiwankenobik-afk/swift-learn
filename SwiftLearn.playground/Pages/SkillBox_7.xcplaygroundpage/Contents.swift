@@ -19,9 +19,7 @@ class Animal {
     }
     
     func sleep() {
-        guard
-            !isTooOld
-        else {
+        guard !isTooOld else {
             print("Животное слишком старое")
             return
         }
@@ -31,74 +29,53 @@ class Animal {
     }
     
     func eating() {
-        guard
-            !isTooOld
-        else {
+        guard !isTooOld else {
             print("Животное слишком старое")
             return
         }
         energy += 3
-        currentAge += 1
-        tryIncrementAge
+        weight += 1
+        tryIncrementAge()
         print("\(name) ест")
     }
     
-    
+    var certainMove = "передвигается"
     func move() {
-        guard
-            !isTooOld
-        else {
+        guard !isTooOld else {
             print("Животное слишком старое")
             return
         }
-        guard
-            energy >= 5
-        else {
-            print("У животного нет энергии")
+        guard energy >= 5 else {
+            print("У животного нет сил продолжать путь")
             return
         }
-        guard
-            weight >= 1
-        else {
+        guard weight >= 1 else {
             print("У животного недостаточно веса")
             return
         }
         energy -= 5
         weight -= 1
-        tryIncrementAge
-        print("\(name) передвигается")
+        tryIncrementAge()
+        print("\(name) \(certainMove)")
     }
     
     func love() -> Animal?  {
-        guard
-            !isTooOld
-        else {
+        guard !isTooOld else {
             print("Животное слишком старое")
             return nil
         }
-        guard
-            energy >= 5
-        else {
-            print("У животного нет энергии")
+        guard energy >= 5 else {
+            print("У животного нет сил для размножения")
             return nil
         }
-        guard
-            weight >= 1
-        else {
-            print("У животного недостаточно веса")
-            return nil
-        }
-        energy -= 5
-        weight -= 1
-        
         let randomEnergy = Int.random(in: 1...10)
         let randomWeight = Int.random(in: 1...5)
-        let nameChild = "\(name) младший"
+        let nameChild = "\(name)"
         print("Поздравляем! У \(name) родился ребенок: \(nameChild). Вес ребенка: \(randomWeight), энергия ребенка: \(randomEnergy), возраст ребенка: \(currentAge), максимальное время жизни: \(maxAge)")
         return Animal(energy: randomEnergy, weight: randomWeight, maxAge: maxAge, name: nameChild)
     }
     
-    private func tryIncrementAge() {
+    func tryIncrementAge() {
         if Bool.random() {
             currentAge += 1
         }
@@ -117,7 +94,208 @@ var newCat = cat.love()
 newCat?.sleep()
 newCat?.eating()
 
-
 //MARK: Задание 2. Создайте наследников класса Animal: Bird, Fish, Dog. В каждом из наследников переопределите функцию, отвечающую за передвижение. Для каждого наследника в этой функции необходимо вызвать родительскую реализацию и дополнительно вывести в консоль сообщение: энергия, вес, для Bird — «летит», для Fish — «плывет», для Dog — «бежит». Добейтесь, чтобы дополнительное сообщение выводилось только если выполнилась родительская реализация. В каждом из наследников переопределите функцию, отвечающую за рождение потомка. Класс Fish должен возвращать объект класса Fish. Аналогично с Bird и Dog.
 
+class Bird: Animal {
+    override func move() {
+        let energyBird = energy
+        let weightBird = weight
+        certainMove = "летит"
+        super.move()
+        if energyBird != energy && weightBird != weight {
+            print("Энергия птички: \(energy), вес птички: \(weight)")
+        }
+    }
+    override func love() -> Bird? {
+        guard let animal = super.love() else {
+            return nil
+        }
+        let birdChild = Bird(energy: animal.energy, weight: animal.weight, maxAge: animal.maxAge, name: animal.name)
+        return birdChild
+    }
+}
+
+class Fish: Animal {
+    override func move() {
+        let energyFish = energy
+        let weightFish = weight
+        certainMove = "плывет"
+        super.move()
+        if energyFish != energy && weightFish != weight {
+            print("Энергия рыбки: \(energy), вес рыбки: \(weight)")
+        }
+    }
+    override func love() -> Fish? {
+        guard let animal = super.love() else {
+            return nil
+        }
+        let fishChild = Fish(energy: animal.energy, weight: animal.weight, maxAge: animal.maxAge, name: animal.name)
+        return fishChild
+    }
+}
+
+class Dog: Animal {
+    override func move() {
+        let energyDog = energy
+        let weightDog = weight
+        certainMove = "бежит"
+        super.move()
+        if energyDog != energy && weightDog != weight {
+            print("Энергия собаки: \(energy), вес собаки: \(weight)")
+        }
+    }
+    override func love() -> Dog? {
+        guard let animal = super.love() else {
+            return nil
+        }
+        let dogChild = Dog(energy: animal.energy, weight: animal.weight, maxAge: animal.maxAge, name: animal.name)
+        return dogChild
+    }
+}
+
+class Cat: Animal {
+    override func move() {
+        let energyCat = energy
+        let weightCat = weight
+        certainMove = "бежит"
+        super.move()
+        if energyCat != energy && weightCat != weight {
+            print("Энергия кота: \(energy), вес кота: \(weight)")
+        }
+    }
+    override func love() -> Cat? {
+        guard let animal = super.love() else {
+            return nil
+        }
+        let catChild = Cat(energy: animal.energy, weight: animal.weight, maxAge: animal.maxAge, name: animal.name)
+        return catChild
+    }
+}
+
+//Птички проверка
+var redBird = Bird(energy: 10, weight: 10, maxAge: 10, name: "Гоша")
+redBird.move()
+var yellowBird = redBird.love()
+yellowBird?.sleep()
+yellowBird?.move()
+
+//Рыбки проверка
+var yellowFish = Fish(energy: 10, weight: 10, maxAge: 10, name: "Полосатик")
+yellowFish.move()
+var redFish = yellowFish.love()
+redFish?.sleep()
+redFish?.move()
+
+//Собачки проверка
+var blackDog = Dog(energy: 10, weight: 10, maxAge: 10, name: "Бобик")
+blackDog.move()
+var whiteDog = blackDog.love()
+whiteDog?.sleep()
+whiteDog?.move()
+whiteDog?.move()
+
+//Коты проверка
+var blackCat = Cat(energy: 10, weight: 10, maxAge: 10, name: "Барсик")
+blackCat.move()
+var whiteCat = blackCat.love()
+whiteCat?.sleep()
+whiteCat?.move()
+whiteCat?.move()
+
 //MARK: Задание 3. Создайте класс NatureReserve, который представляет из себя заповедник с разными животными. Инициализируйте заповедник. Изначально в нём должно быть пять птиц, три рыбы, две собаки и несколько обычных животных. По желанию: создайте дополнительные виды животных и добавьте их в заповедник. Напишите программу, которая имитирует жизненный цикл животных в заповеднике. В течение ограниченного числа итераций N каждое животное делает одно случайное действие, которое позволяют сделать его свойства: ест, спит, двигается, рожает. Когда у животного рождается детёныш, он добавляется к общему количеству животных заповедника. В конце итерации все животные, у которых возраст превысил максимальный, удаляются из заповедника. По окончании работы должно выводиться число животных в заповеднике, которые остались живы. Если все животные исчезли — программа должна прерываться, с выводом соответствующего сообщения.
+
+class NatureReserve {
+    var zoo: [Animal]
+    
+    init() {
+        self.zoo = []
+        for bird in 1...5 {
+            zoo.append(Bird(energy: Int.random(in: 1...10), weight: Int.random(in: 1...5), maxAge: Int.random(in: 2...4), name: "Птичка \(bird)"))
+        }
+        for fish in 1...3 {
+            zoo.append(Fish(energy: Int.random(in: 1...10), weight: Int.random(in: 1...5), maxAge: Int.random(in: 3...4), name: "Рыбка \(fish)"))
+        }
+        for dog in 1...2 {
+            zoo.append(Dog(energy: Int.random(in: 1...10), weight: Int.random(in: 1...5), maxAge: Int.random(in: 3...4), name: "Собака \(dog)"))
+        }
+        for animal in 1...4 {
+            zoo.append(Animal(energy: Int.random(in: 1...10), weight: Int.random(in: 1...5), maxAge: Int.random(in: 3...4), name: "Животное \(animal)"))
+        }
+    }
+    
+    func statistics() {
+        var birdCount = 0
+        var fishCount = 0
+        var dogCount = 0
+        var catCount = 0
+        var animalCount = 0
+        
+        for animals in zoo {
+            switch animals {
+            case is Bird:
+                birdCount += 1
+            case is Fish:
+                fishCount += 1
+            case is Dog:
+                dogCount += 1
+            case is Cat:
+                catCount += 1
+            default:
+                animalCount += 1
+            }
+        }
+        print("Общее количество животных в заповеднике: \(zoo.count), из них птиц: \(birdCount), рыб: \(fishCount), собак: \(dogCount), котов: \(catCount), остальных животных: \(animalCount)")
+    }
+    
+    func simulationCicleZoo (iterations: Int) {
+        for iteration in 1...iterations {
+            var deadAnimal: [Animal] = []
+            if zoo.isEmpty {
+                print("Все животные умерли на \(iteration) итерации")
+                break
+            }
+            for animal in zoo {
+                let randomAction = Int.random(in: 1...4)
+                switch randomAction {
+                case 1:
+                    animal.sleep()
+                case 2:
+                    animal.eating()
+                case 3:
+                    animal.move()
+                case 4:
+                    if let child = animal.love() {
+                        zoo.append(child)
+                    }
+                default:
+                    break
+                }
+                if animal.isTooOld {
+                    deadAnimal.append(animal)
+                    print("\(animal.name) скончался...")
+                }
+                    }
+            for animal in deadAnimal {
+                if let index = zoo.firstIndex(where: {$0 === animal}) {
+                    zoo.remove(at: index)
+                    }
+                }
+            }
+        statistics()
+        print("Количество итераций: \(iterations)")
+        }
+    }
+
+//добавляю котов
+let natureReserve = NatureReserve()
+for cat in 1...6 {
+    natureReserve.zoo.append(Cat(energy: Int.random(in: 1...10), weight: Int.random(in: 1...5), maxAge: Int.random(in: 3...4), name: "Кот \(cat)"))
+}
+
+//добавляю рыбку c птичкой
+natureReserve.zoo.append(Fish(energy: 10, weight: 10, maxAge: 3, name: "Золотая рыбка"))
+natureReserve.zoo.append(Bird(energy: 3, weight: 3, maxAge: 2, name: "Кеша"))
+
+natureReserve.statistics()
+natureReserve.simulationCicleZoo(iterations: Int.random(in: 10...20))
+
