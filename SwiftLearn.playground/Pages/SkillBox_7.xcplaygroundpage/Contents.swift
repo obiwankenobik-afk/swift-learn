@@ -3,146 +3,109 @@
 class Animal {
     var energy: Int
     var weight: Int
-    var currentAge: Int
-    var maxAge: Int = 40
+    var currentAge: Int = 0
+    var maxAge: Int
     var name: String
-    var childrenArray: [childAnimal] = []
     
     var isTooOld: Bool {
         currentAge >= maxAge
     }
     
-    init(energy: Int, weight: Int, currentAge: Int, name: String) {
+    init(energy: Int, weight: Int, maxAge: Int, name: String) {
         self.energy = energy
         self.weight = weight
-        self.currentAge = currentAge
+        self.maxAge = maxAge
         self.name = name
     }
     
     func sleep() {
-        if !isTooOld {
-            if energy > 0 {
-                if weight > 0 {
-                    energy += 5
-                    currentAge += 1
-                    print("\(name) спит")
-                } else {
-                    print("у животного недостаточно веса")
-                }
-            } else {
-                print("у животного нет энергии")
-            }
-        } else {
-            print("животное слишком старое")
+        guard
+            !isTooOld
+        else {
+            print("Животное слишком старое")
+            return
         }
+        energy += 5
+        currentAge += 1
+        print("\(name) спит")
     }
     
     func eating() {
-        if !isTooOld {
-            if energy > 0 {
-                if weight > 0 {
-                    energy += 3
-                    currentAge += 1
-                    tryIncrementAge
-                    print("\(name) ест")
-                } else {
-                    print("у животного недостаточно веса")
-                }
-            } else {
-                print("у животного нет энергии")
-            }
-        } else {
-            print("животное слишком старое")
+        guard
+            !isTooOld
+        else {
+            print("Животное слишком старое")
+            return
         }
+        energy += 3
+        currentAge += 1
+        tryIncrementAge
+        print("\(name) ест")
     }
+    
     
     func move() {
-        if !isTooOld {
-            if energy > 5 {
-                if weight > 1 {
-                    energy -= 5
-                    weight -= 1
-                    tryIncrementAge
-                    print("\(name) передвигается")
-                } else {
-                    print("у животного недостаточно веса")
-                }
-            } else {
-                print("у животного нет энергии")
-            }
-        } else {
-            print("животное слишком старое")
+        guard
+            !isTooOld
+        else {
+            print("Животное слишком старое")
+            return
         }
+        guard
+            energy >= 5
+        else {
+            print("У животного нет энергии")
+            return
+        }
+        guard
+            weight >= 1
+        else {
+            print("У животного недостаточно веса")
+            return
+        }
+        energy -= 5
+        weight -= 1
+        tryIncrementAge
+        print("\(name) передвигается")
     }
     
-    enum childBirthday {
-        case animal(child: childAnimal, message: String)
-        case reasonNotBorn(reason: String)
+    func love() -> Animal?  {
+        guard
+            !isTooOld
+        else {
+            print("Животное слишком старое")
+            return nil
+        }
+        guard
+            energy >= 5
+        else {
+            print("У животного нет энергии")
+            return nil
+        }
+        guard
+            weight >= 1
+        else {
+            print("У животного недостаточно веса")
+            return nil
+        }
+        energy -= 5
+        weight -= 1
         
-        var description: String {
-            switch self {
-            case .animal(let child, let message):
-                return "\(message)" + ". Вес ребенка: \(child.weight), энергия ребенка: \(child.energy), возраст ребенка: \(child.currentAge) "
-            case .reasonNotBorn(let reason):
-                return "Ребенок не родился по причине: \(reason)"
-            }
-        }
-    }
-    
-    func sex() -> childBirthday {
-        if !isTooOld {
-            if energy > 5 {
-                if weight > 1 {
-                    energy -= 3
-                    let child = childAnimal(parent: self)
-                    childrenArray.append(child)
-                    let message = "У \(name) родился ребенок: \(child.name)"
-                    return.animal(child: child, message: message)
-                } else {
-                    return .reasonNotBorn(reason: "У животного недостаточный вес")
-                }
-            } else {
-                return .reasonNotBorn(reason: "У животного недостаточно энергии")
-            }
-        } else {
-            return .reasonNotBorn(reason: "Животное слишком старое")
-        }
-    }
-    
-    func showChildren() {
-        if childrenArray.isEmpty {
-            print("У \(name) нет детей")
-        } else {
-            print("Дети \(name):")
-            for (index, child) in childrenArray.enumerated() {
-                print("\(index + 1). Имя: \(child.name) \(index + 1), энергия: \(child.energy), вес: \(child.weight), возраст: \(child.currentAge)")
-            }
-        }
+        let randomEnergy = Int.random(in: 1...10)
+        let randomWeight = Int.random(in: 1...5)
+        let nameChild = "\(name) младший"
+        print("Поздравляем! У \(name) родился ребенок: \(nameChild). Вес ребенка: \(randomWeight), энергия ребенка: \(randomEnergy), возраст ребенка: \(currentAge), максимальное время жизни: \(maxAge)")
+        return Animal(energy: randomEnergy, weight: randomWeight, maxAge: maxAge, name: nameChild)
     }
     
     private func tryIncrementAge() {
-        let randomIncreaseAge = Bool.random()
-        if randomIncreaseAge {
+        if Bool.random() {
             currentAge += 1
-        } else {
-            currentAge
         }
     }
 }
 
-final class childAnimal: Animal {
-    init (parent: Animal) {
-        let parentMaxAge = parent.maxAge
-        let parentName = parent.name
-        let childEnergy = Int.random(in: 1...10)
-        let childWeight = Int.random(in: 1...5)
-        let currentAge = 0
-        
-        super.init(energy: childEnergy, weight: childWeight, currentAge: currentAge, name: "\(parentName) младший")
-    }
-}
-
-var cat = Animal(energy: 10, weight: 10, currentAge: 30, name: "Barsik")
+var cat = Animal(energy: 10, weight: 10, maxAge: 30, name: "Barsik")
 
 cat.move()
 print(cat.currentAge)
@@ -150,12 +113,10 @@ cat.eating()
 print(cat.currentAge)
 cat.sleep()
 print(cat.currentAge)
+var newCat = cat.love()
+newCat?.sleep()
+newCat?.eating()
 
-let firstChildCat = cat.sex
-print(firstChildCat().description)
-let secondChildCat = cat.sex
-print(secondChildCat().description)
-cat.showChildren()
 
 //MARK: Задание 2. Создайте наследников класса Animal: Bird, Fish, Dog. В каждом из наследников переопределите функцию, отвечающую за передвижение. Для каждого наследника в этой функции необходимо вызвать родительскую реализацию и дополнительно вывести в консоль сообщение: энергия, вес, для Bird — «летит», для Fish — «плывет», для Dog — «бежит». Добейтесь, чтобы дополнительное сообщение выводилось только если выполнилась родительская реализация. В каждом из наследников переопределите функцию, отвечающую за рождение потомка. Класс Fish должен возвращать объект класса Fish. Аналогично с Bird и Dog.
 
