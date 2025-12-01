@@ -10,14 +10,14 @@
 // 3. Вызваны все свойства и методы протокола у каждого экземпляра из пункта 1.
 // 4. Задание сделано без изменения протокола.
 
-protocol CalorieCountProtocol {
+private protocol CalorieCountProtocol {
     var calories: Int { get }
     func description() -> String
 }
 
-class Food: CalorieCountProtocol {
+final class Food: CalorieCountProtocol {
     var calories: Int
-    var food: String
+    private var food: String
     
     init(calories: Int, food: String) {
         self.calories = calories
@@ -25,7 +25,7 @@ class Food: CalorieCountProtocol {
     }
     
     func description() -> String {
-        return "в этом \(food) столько калорий: \(calories)"
+        "в этом \(food) столько калорий: \(calories)"
     }
 }
 
@@ -37,7 +37,7 @@ struct Product: CalorieCountProtocol {
     var product: String
     
     func description() -> String {
-        return "в этом '\(product)' столько калорий: \(calories)"
+        "в этом '\(product)' столько калорий: \(calories)"
     }
 }
 
@@ -60,11 +60,11 @@ case apple, pizza, burger
     func description() -> String {
         switch self {
         case.apple:
-            return "В яблоке мало калорий"
+            "В яблоке мало калорий"
         case.pizza:
-            return "В пицце много калорий"
+            "В пицце много калорий"
         case.burger:
-            return "В бургере не мало калорий"
+            "В бургере не мало калорий"
         }
     }
 }
@@ -102,7 +102,7 @@ struct Balance: Equatable {
     let amount: Int
 }
 
-class BalanceObject: Equatable {
+final class BalanceObject: Equatable {
     var amount: Int
     
     init(amount: Int) {
@@ -110,7 +110,7 @@ class BalanceObject: Equatable {
     }
     
     static func == (lhs: BalanceObject, rhs: BalanceObject) -> Bool {
-        return lhs.amount == rhs.amount
+        lhs.amount == rhs.amount
     }
 }
 
@@ -173,7 +173,7 @@ struct Haski: Dog {
     var color: String
 }
 
-class Corgi: Dog {
+final class Corgi: Dog {
     var name: String
     var color: String
     
