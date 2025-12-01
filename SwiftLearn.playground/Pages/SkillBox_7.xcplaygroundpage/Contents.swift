@@ -21,7 +21,7 @@ class Animal {
     
     enum CustomError: Error {
         case tooOld, lowEnergy, lowWeight
-        var errorDescription: String? {
+        var errorDescription: String {
             switch self {
             case .tooOld:
                 "Животное слишком старое"
@@ -34,20 +34,14 @@ class Animal {
     }
     
     func sleep() {
-        guard !isTooOld else {
-            print("Животное слишком старое")
-            return
-        }
+        guard let _ = try? validate() else { return }
         energy += 5
         currentAge += 1
         print("\(name) спит")
     }
     
     func eating() {
-        guard !isTooOld else {
-            print("Животное слишком старое")
-            return
-        }
+        guard let _ = try? validate() else { return }
         energy += 3
         weight += 1
         tryIncrementAge()
@@ -55,16 +49,7 @@ class Animal {
     }
     
     func move() throws -> Bool {
-        guard !isTooOld else {
-            throw CustomError.tooOld
-        }
-        guard energy >= 5 else {
-            throw CustomError.lowEnergy
-        }
-        guard weight >= 1 else {
-            throw CustomError.lowWeight
-        }
-        
+        guard let _ = try? validate() else { return false }
         energy -= 5
         weight -= 1
         tryIncrementAge()
@@ -73,10 +58,7 @@ class Animal {
     }
     
     func love() -> Animal?  {
-        guard !isTooOld else {
-            print("Животное слишком старое")
-            return nil
-        }
+        guard let _ = try? validate() else { return nil }
         let randomEnergy = Int.random(in: 1...10)
         let randomWeight = Int.random(in: 1...5)
         print("Поздравляем! У \(name) родился ребенок: \(name). Вес ребенка: \(randomWeight), энергия ребенка: \(randomEnergy), возраст ребенка: \(currentAge), максимальное время жизни: \(maxAge)")
@@ -86,6 +68,21 @@ class Animal {
     func tryIncrementAge() {
         if Bool.random() {
             currentAge += 1
+        }
+    }
+    
+    private func validate() throws {
+        guard !isTooOld else {
+            print(CustomError.tooOld.errorDescription)
+            throw CustomError.tooOld
+        }
+        guard energy >= 5 else {
+            print(CustomError.lowEnergy.errorDescription)
+            throw CustomError.lowEnergy
+        }
+        guard weight >= 1 else {
+            print(CustomError.lowWeight.errorDescription)
+            throw CustomError.lowWeight
         }
     }
 }
@@ -104,7 +101,7 @@ newCat?.eating()
 
 //MARK: Задание 2. Создайте наследников класса Animal: Bird, Fish, Dog. В каждом из наследников переопределите функцию, отвечающую за передвижение. Для каждого наследника в этой функции необходимо вызвать родительскую реализацию и дополнительно вывести в консоль сообщение: энергия, вес, для Bird — «летит», для Fish — «плывет», для Dog — «бежит». Добейтесь, чтобы дополнительное сообщение выводилось только если выполнилась родительская реализация. В каждом из наследников переопределите функцию, отвечающую за рождение потомка. Класс Fish должен возвращать объект класса Fish. Аналогично с Bird и Dog.
 
-class Bird: Animal {
+final class Bird: Animal {
     override func move() throws -> Bool {
         certainMove = "летит"
         let moved = try super.move()
@@ -123,7 +120,7 @@ class Bird: Animal {
     }
 }
 
-class Fish: Animal {
+final class Fish: Animal {
     override func move() throws -> Bool {
         certainMove = "плывет"
         let moved = try super.move()
@@ -142,7 +139,7 @@ class Fish: Animal {
     }
 }
 
-class Dog: Animal {
+final class Dog: Animal {
     override func move() throws -> Bool {
         certainMove = "бежит"
         let moved = try super.move()
@@ -161,7 +158,7 @@ class Dog: Animal {
     }
 }
 
-class Cat: Animal {
+final class Cat: Animal {
     override func move() throws -> Bool {
         certainMove = "бежит"
         let moved = try super.move()
@@ -205,7 +202,7 @@ whiteCat?.sleep()
 
 //MARK: Задание 3. Создайте класс NatureReserve, который представляет из себя заповедник с разными животными. Инициализируйте заповедник. Изначально в нём должно быть пять птиц, три рыбы, две собаки и несколько обычных животных. По желанию: создайте дополнительные виды животных и добавьте их в заповедник. Напишите программу, которая имитирует жизненный цикл животных в заповеднике. В течение ограниченного числа итераций N каждое животное делает одно случайное действие, которое позволяют сделать его свойства: ест, спит, двигается, рожает. Когда у животного рождается детёныш, он добавляется к общему количеству животных заповедника. В конце итерации все животные, у которых возраст превысил максимальный, удаляются из заповедника. По окончании работы должно выводиться число животных в заповеднике, которые остались живы. Если все животные исчезли — программа должна прерываться, с выводом соответствующего сообщения.
 
-class NatureReserve {
+final class NatureReserve {
     var zoo: [Animal] = []
     
     init(zoo: [Animal]) {
@@ -216,7 +213,7 @@ class NatureReserve {
         creatingZoo()
     }
     
-    func creatingZoo() {
+    private func creatingZoo() {
         for bird in 1...5 {
             zoo.append(Bird(energy: Int.random(in: 1...10), weight: Int.random(in: 1...5), maxAge: Int.random(in: 2...4), name: "Птичка \(bird)"))
         }
@@ -231,7 +228,7 @@ class NatureReserve {
         }
     }
     
-    func statistics() {
+    private func statistics() {
         var birdCount = 0
         var fishCount = 0
         var dogCount = 0
@@ -305,8 +302,14 @@ natureReserve.simulationCicleZoo(iterations: 10)
 
 //MARK: Задание 4. Сделать Систему Боя Животных (Arena)** Сделай: •    класс Arena •    туда добавляются животные •    каждую итерацию случайные два животных дерутся •    урон случайный •    если у животного 0 энергии → оно падает •    победитель получает +energy, +weight •    проигравший удаляется из списка
 
-class Arena {
-    var participants : [Animal] = []
+final class Arena {
+    var participants: [Animal] = []
+    var firstHitEnergy: Int = 0
+    var firstHitWeight: Int = 0
+    var secondHitEnergy: Int = 0
+    var secondHitWeight: Int = 0
+    var bonusWeight: Int = 0
+    var bonusEnergy: Int = 0
     
     init() {
         creatingFighter()
@@ -316,7 +319,7 @@ class Arena {
         self.participants = participants
     }
     
-    func creatingFighter() {
+    private func creatingFighter(){
         for bird in 1...5 {
             participants.append(Bird(energy: Int.random(in: 5...20), weight: Int.random(in: 1...5), maxAge: 50, name: "Птичий воин \(bird)"))
         }
@@ -331,56 +334,71 @@ class Arena {
         }
     }
     
-    func battleRound(rounds: Int) {
-        for _ in 1...rounds {
-            if participants.count < 2 { break }
-            let firstIndex = Int.random(in: 0..<participants.count)
-            var secondIndex: Int
-            repeat {
-                secondIndex = Int.random(in: 0..<participants.count)
-            } while secondIndex == firstIndex
-            
-            let firstFighter = participants[firstIndex]
-            let secondFighter = participants[secondIndex]
-            
-            let firstHitEnergy = Int.random(in: 1...5)
-            let firstHitWeight = Int.random(in: 0...2)
-            let secondHitEnergy = Int.random(in: 1...5)
-            let secondHitWeight = Int.random(in: 0...2)
-            let bonusWeight = Int.random(in: 2...4)
-            let bonusEnergy = Int.random(in: 3...5)
-            
-            secondFighter.energy -= firstHitEnergy
-            secondFighter.weight -= firstHitWeight
-            secondFighter.tryIncrementAge()
-            print("После удара у \(secondFighter.name) энергии: \(secondFighter.energy), вес: \(secondFighter.weight)")
-            
-            firstFighter.energy -= secondHitEnergy
-            firstFighter.weight -= secondHitWeight
-            firstFighter.tryIncrementAge()
-            print("После удара у \(firstFighter.name) энергии: \(firstFighter.energy), вес: \(firstFighter.weight)")
-            
-            participants.removeAll { $0.energy <= 0 || $0.weight <= 0}
-            
-            if participants.contains(where: { $0 === firstFighter}) && !participants.contains(where: { $0 === secondFighter}) {
-                print("Победил \(firstFighter.name) и получает бонус: +\(bonusEnergy) энергии и +\(bonusWeight) веса ")
-                firstFighter.energy += bonusEnergy
-                firstFighter.weight += bonusWeight
-                print("У героя \(firstFighter.energy) энергии и \(firstFighter.weight) веса")
-            } else if participants.contains(where: { $0 === secondFighter}) && !participants.contains(where: { $0 === firstFighter}) {
-                print("Победил \(secondFighter.name) и получает бонус: +\(bonusEnergy) энергии и +\(bonusWeight) веса ")
-                secondFighter.energy += bonusEnergy
-                secondFighter.weight += bonusWeight
-                print("У героя \(secondFighter.energy) энергии и \(secondFighter.weight) веса")
-            }
-        }
-        if participants.isEmpty {
-            print("Все бойцы мертвы.")
-        } else {
-            print("Новый чемпион арены \(participants[0].name) у которого \(participants[0].energy) энергии \(participants[0].weight) веса" )
-        }
+    private func creatingHit() -> (firstHitEnergy: Int, firstHitWeight: Int, secondHitEnergy: Int, secondHitWeight: Int, bonusWeight: Int, bonusEnergy: Int) {
+        return (
+        Int.random(in: 1...5), Int.random(in: 0...2),
+        Int.random(in: 1...5), Int.random(in: 0...2),
+        Int.random(in: 2...4), Int.random(in: 3...5)
+        )
     }
-}
+    
+       private func pickFighters() -> (Animal, Animal) {
+           let firstFighter = participants.randomElement()!
+           var secondFighter = participants.randomElement()!
+           while firstFighter === secondFighter {
+               secondFighter = participants.randomElement()!
+           }
+           return (firstFighter, secondFighter)
+       }
+
+       private func makingHit(firstFighter: Animal, secondFighter: Animal, hit: (firstHitEnergy: Int, firstHitWeight: Int, secondHitEnergy: Int, secondHitWeight: Int, bonusWeight: Int, bonusEnergy: Int)) {
+           //первый бьет
+           secondFighter.energy -= hit.firstHitEnergy
+           secondFighter.weight -= hit.firstHitWeight
+           secondFighter.tryIncrementAge()
+           //второй бьет
+           firstFighter.energy -= hit.secondHitEnergy
+           firstFighter.weight -= hit.secondHitWeight
+           firstFighter.tryIncrementAge()
+       }
+    
+    private func removeDead() -> [Animal] {
+           let dead = participants.filter { $0.energy <= 0 || $0.weight <= 0 }
+           participants.removeAll { $0.energy <= 0 || $0.weight <= 0 }
+           return dead
+       }
+    
+       private func applyWinnerBonus(firstFighter: Animal, secondFighter: Animal, dead: [Animal], hit: (firstHitEnergy: Int, firstHitWeight: Int, secondHitEnergy: Int, secondHitWeight: Int, bonusWeight: Int, bonusEnergy: Int)) {
+           if dead.contains(where: { $0 === firstFighter }) {
+               secondFighter.energy += hit.bonusEnergy
+               secondFighter.weight += hit.bonusWeight
+           } else if dead.contains(where: { $0 === secondFighter }) {
+               firstFighter.energy += hit.bonusEnergy
+               firstFighter.weight += hit.bonusWeight
+           }
+       }
+
+       private func battleOneRound() {
+           guard participants.count >= 2 else { return }
+           let (first, second) = pickFighters()
+           let hit = creatingHit()
+           makingHit(firstFighter: first, secondFighter: second, hit: hit)
+           let dead = removeDead()
+           applyWinnerBonus(firstFighter: first, secondFighter: second, dead: dead, hit: hit)
+       }
+
+       func battleRound(rounds: Int) {
+           for _ in 1...rounds {
+               if participants.count < 2 { break }
+               battleOneRound()
+           }
+           if participants.isEmpty {
+               print("Все бойцы мертвы.")
+           } else {
+               print("Победитель арены: \(participants[0].name) — энергия \(participants[0].energy), вес \(participants[0].weight)")
+           }
+       }
+   }
 
 let arena = Arena()
 arena.battleRound(rounds:100)

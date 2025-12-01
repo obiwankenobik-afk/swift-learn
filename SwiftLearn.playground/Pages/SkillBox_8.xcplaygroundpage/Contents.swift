@@ -10,7 +10,7 @@
 // 3. Вызваны все свойства и методы протокола у каждого экземпляра из пункта 1.
 // 4. Задание сделано без изменения протокола.
 
-private protocol CalorieCountProtocol {
+protocol CalorieCountProtocol {
     var calories: Int { get }
     func description() -> String
 }
@@ -48,22 +48,22 @@ enum FoodType: CalorieCountProtocol {
 case apple, pizza, burger
     var calories: Int {
         switch self {
-        case.apple:
+        case .apple:
             return 50
-        case.pizza:
+        case .pizza:
             return 1000
-        case.burger:
+        case .burger:
             return 500
         }
     }
     
     func description() -> String {
         switch self {
-        case.apple:
+        case .apple:
             "В яблоке мало калорий"
-        case.pizza:
+        case .pizza:
             "В пицце много калорий"
-        case.burger:
+        case .burger:
             "В бургере не мало калорий"
         }
     }
