@@ -48,23 +48,17 @@ enum FoodType: CalorieCountProtocol {
 case apple, pizza, burger
     var calories: Int {
         switch self {
-        case .apple:
-            return 50
-        case .pizza:
-            return 1000
-        case .burger:
-            return 500
+        case .apple: 50
+        case .pizza: 1000
+        case .burger: 500
         }
     }
     
     func description() -> String {
         switch self {
-        case .apple:
-            "В яблоке мало калорий"
-        case .pizza:
-            "В пицце много калорий"
-        case .burger:
-            "В бургере не мало калорий"
+        case .apple: "В яблоке мало калорий"
+        case .pizza: "В пицце много калорий"
+        case .burger: "В бургере не мало калорий"
         }
     }
 }
